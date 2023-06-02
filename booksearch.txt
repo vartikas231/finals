@@ -1,0 +1,30 @@
+import React, { useState } from 'react';
+
+const books = [
+  { title: 'My Talented book', author: 'ABC' },
+  { title: 'My Third Book', author: 'XYZ' },
+  { title: 'First Book', author: 'CDE' }
+];
+
+const BookSearch: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+  
+  const filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+  return (
+    <div>
+      <input type="text" value={searchTerm} onChange={handleSearchChange} />
+      {filteredBooks.map((book, index) => (
+        <div key={index}>
+          {book.title} - {book.author}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default BookSearch;

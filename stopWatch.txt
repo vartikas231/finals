@@ -1,0 +1,100 @@
+import React, { useReducer, useState } from "react";
+
+interface StopwatchState {
+  isRunning: boolean;
+  elapsedTime: number;
+  laps: number[];
+}
+
+type StopwatchAction =
+  | { type: "START" }
+  | { type: "STOP" }
+  | { type: "RESET" }
+  | { type: "TICK" }
+  | { type: "ADD_LAP" };
+
+const stopwatchReducer = (
+  state: StopwatchState,
+  action: StopwatchAction
+): StopwatchState => {
+  switch (action.type) {
+    case "START":
+      return { ...state, isRunning: true };
+    case "STOP":
+      return { ...state, isRunning: false };
+    case "RESET":
+      return { isRunning: false, elapsedTime: 0, laps: [] };
+    case "TICK":
+      return { ...state, elapsedTime: state.elapsedTime + 1 };
+    case "ADD_LAP":
+      return { ...state, laps: [...state.laps, state.elapsedTime] };
+    default:
+      return state;
+  }
+};
+
+const Stopwatch: React.FC = () => {
+  const [state, dispatch] = useReducer(stopwatchReducer, {
+    isRunning: false,
+    elapsedTime: 0,
+    laps: [],
+  });
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  const start = () => {
+    if (!state.isRunning) {
+      dispatch({ type: "START" });
+      const id = setInterval(() => dispatch({ type: "TICK" }), 10); // Update tick interval to 10 milliseconds
+      setIntervalId(id);
+    }
+  };
+
+  const stop = () => {
+    if (state.isRunning && intervalId) {
+      dispatch({ type: "STOP" });
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+  };
+
+  const reset = () => {
+    if (!state.isRunning) {
+      dispatch({ type: "RESET" });
+    }
+  };
+
+  const addLap = () => {
+    if (state.isRunning) {
+      dispatch({ type: "ADD_LAP" });
+    }
+  };
+
+  const formatTime = (milliseconds: number) => {
+    const minutes = Math.floor(milliseconds / 6000);
+    const seconds = Math.floor((milliseconds % 6000) / 100);
+    const centiseconds = milliseconds % 100;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}.${centiseconds.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <div>
+      <h1>{formatTime(state.elapsedTime)}</h1>
+      <button onClick={start}>Start</button>
+      <button onClick={stop}>Stop</button>
+      <button onClick={reset}>Reset</button>
+      <button onClick={addLap}>Lap</button>
+
+      <ul>
+        {state.laps.map((lap, index) => (
+          <li key={index}>{formatTime(lap)}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Stopwatch;
+
+export {}; // Add an empty export statement at the end

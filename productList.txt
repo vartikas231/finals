@@ -1,0 +1,68 @@
+import React, { useState } from "react";
+
+interface Product {
+  title: string;
+  image: string;
+  price: number;
+  description: string;
+}
+
+const products: Product[] = [
+  {
+    title: "Product1",
+    image: "https://picsum.photos/200",
+    price: 380,
+    description: "first product",
+  },
+  {
+    title: "Product2",
+    image: "https://picsum.photos/200",
+    price: 980,
+    description: "second product",
+  },
+  {
+    title: "Product3",
+    image: "https://picsum.photos/200",
+    price: 1200,
+    description: "third product",
+  },
+];
+
+const ProductList  = () => {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>({} as Product);
+
+  const handleProductSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedTitle = event.target.value;
+    const selectedProduct =
+      products.find((product) => product.title === selectedTitle) || null;
+    setSelectedProduct(selectedProduct);
+  };
+
+  return (
+    <div>
+       <ul>
+        {products.map((product, index) => (
+          <li key={index}>{product.title}</li>
+        ))}
+      </ul> 
+      <select onChange={handleProductSelect}>
+        <option value="">Select a product</option>
+        {products.map((product, index) => (
+          <option key={index} value={product.title}>
+            {product.title}
+          </option>
+        ))}
+      </select>
+      {selectedProduct && (
+        <div>
+          <h2>{selectedProduct.title}</h2>
+          <img src={selectedProduct.image} alt={selectedProduct.title} />
+          <p>Price: {selectedProduct.price}</p>
+          <p>Description: {selectedProduct.description}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProductList;

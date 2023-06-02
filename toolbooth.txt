@@ -1,0 +1,42 @@
+export class TollBooth {
+  private totalCars: number;
+  private totalCash: number;
+
+  constructor() {
+    this.totalCars = 0;
+    this.totalCash = 0;
+  }
+
+  payingCar(): void {
+    this.totalCars++;
+    this.totalCash += 50;
+  }
+
+  nopayCar(): void {
+    this.totalCars++;
+  }
+
+  display(): void {
+    console.log("Total Cars:", this.totalCars);
+    console.log("Total Cash:", this.totalCash);
+  }
+}
+
+function sample(...args: string[]): void {
+  const tollBooth = new TollBooth();
+
+  for (const arg of args) {
+    if (arg === 'p') {
+      tollBooth.payingCar();
+    } else if (arg === 'n') {
+      tollBooth.nopayCar();
+    }
+  }
+
+  tollBooth.display();
+}
+
+// Testing the logic
+sample('p', 'p', 'n', 'p', 'n');
+sample('p', 'p', 'n', 'p', 'p', 'n', 'p');
+sample('p', 'p', 'n', 'p', 'n', 'p', 'p', 'p', 'n');

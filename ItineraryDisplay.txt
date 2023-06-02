@@ -1,0 +1,45 @@
+import React, { useState } from 'react';
+
+const itinerary = [
+  { "day 1": "Reach the destination" },
+  { "day 2": "City Tour in a company tourist bus" },
+  { "day 2": ["Breakfast & Dinner"] },
+  { "day 3": "Visit Chang-La" },
+  { "day 4": "Back to your home" }
+];
+
+const ItineraryDisplay: React.FC = () => {
+  const [selectedDay, setSelectedDay] = useState('');
+
+  const handleDaySelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDay(event.target.value);
+  };
+
+  return (
+    <div>
+      <select onChange={handleDaySelect}>
+        <option value="">Select a day</option>
+        {itinerary.map((item, index) => {
+          const day = Object.keys(item)[0];
+          return <option key={index} value={day}>{day}</option>;
+        })}
+      </select>
+      <div>
+        {selectedDay && (
+          itinerary
+            .filter(item => Object.keys(item)[0] === selectedDay)
+            .map((item, index) => {
+              const content = Object.values(item)[0];
+              return (
+                <div key={index}>
+                  {Array.isArray(content) ? content.join('\n') : content}
+                </div>
+              );
+            })
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ItineraryDisplay;

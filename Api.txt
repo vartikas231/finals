@@ -1,0 +1,55 @@
+import React, { useEffect, useState } from "react";
+
+interface CartItem {
+  title: string;
+  price: number;
+}
+
+const Cart: React.FC = () => {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    fetch("https://www.baljeetmatta.com/codequotient/Questions/getJSON")
+      .then((response) => response.json())
+      .then((data: CartItem[]) => {
+        setCartItems(data);
+      })
+      .catch((error) => {
+        console.log("Error fetching cart items:", error);
+      });
+  }, []);
+
+  const handleRemoveItem = (item: CartItem) => {
+    setSelectedItems((prevItems) =>
+      prevItems.filter((selectedItem) => selectedItem !== item)
+    );
+  };
+
+  return (
+    <div className="cart-container">
+      <h1>Cart Items</h1>
+      <div className="cart-items">
+        {cartItems.map((item, index) => (
+          <div className="cart-item" key={index}>
+            <p>{item.title}</p>
+            <p>${item.price}</p>
+            <button onClick={() => handleRemoveItem(item)}>Remove</button>
+          </div>
+        ))}
+      </div>
+      <h2>Selected Items</h2>
+      <div className="selected-items">
+        {selectedItems.map((item, index) => (
+          <div className="selected-item" key={index}>
+            <p>{item.title}</p>
+            <p>${item.price}</p>
+            <button onClick={() => handleRemoveItem(item)}>Remove</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Cart;

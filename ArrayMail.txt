@@ -1,0 +1,81 @@
+import React, { useState } from 'react';
+
+ 
+
+interface ArrayProps {}
+
+ 
+
+export const Array: React.FC<ArrayProps> = () => {
+
+  const [myArray, setMyArray] = useState<any[]>([]);
+
+ 
+
+  const insertElements = () => {
+
+    const numElements = parseInt(prompt("Enter Number Of Elements to insert:") || "0");
+
+    const elements: any[] = [];
+
+    for (let i = 0; i < numElements; i++) {
+
+      const element = prompt(`Enter element ${i + 1}:`) || "";
+
+      elements.push(element);
+
+    }
+
+    setMyArray(prevArray => [...prevArray, ...elements]);
+
+  };
+
+ 
+
+  const removeElements = () => {
+
+    const numElements = parseInt(prompt("Enter Number of Elements to Remove:") || "0");
+
+    for (let i = 0; i < numElements; i++) {
+
+      const elementToRemove = prompt(`Enter element ${i + 1} to remove:`) || "";
+
+      const updatedArray = myArray.filter(element => element !== elementToRemove);
+
+      setMyArray(updatedArray);
+
+    }
+
+  };
+
+ 
+
+  return (
+
+    <div>
+
+      <h2>My Array</h2>
+
+      <button onClick={insertElements}>Insert Operation</button>
+
+      <button onClick={removeElements}>Delete Operation</button>
+
+      <div>
+
+        {myArray.map((element, index) => (
+
+            <div>
+
+          <div>Element:{element}</div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </div>
+
+  );
+
+};
